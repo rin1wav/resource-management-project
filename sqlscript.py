@@ -37,7 +37,7 @@ def pause():
 
 def print_header(title):
     print("\n" + "=" * 60)
-    print(title.center(60))
+    print(f"{title:^60}")
     print("=" * 60)
 
 
@@ -46,40 +46,42 @@ def print_header(title):
 # ============================================================
 
 def view_rooms():
+    print_header("VIEW ROOMS")
 
-    print_header("ROOM DETAILS")
+    try:
+        cursor.execute("SELECT * FROM rooms")
+        rooms = cursor.fetchall()
 
-    cursor.execute("SELECT * FROM rooms")
+        if not rooms:
+            print("No rooms found.")
+        else:
+            print(
+                f"{'ID':<10}"
+                f"{'Room No.':<12}"
+                f"{'Type':<22}"
+                f"{'Price':<10}"
+                f"{'Status':<20}"
+            )
 
-    rooms = cursor.fetchall()
+            print("-" * 74)
 
-    if not rooms:
-        print("No rooms found.")
-        return
+            for room in rooms:
+                print(
+                    f"{room[0]:<10}"
+                    f"{room[1]:<12}"
+                    f"{room[2]:<22}"
+                    f"{room[3]:<10}"
+                    f"{room[4]:<20}"
+                )
 
-    print(
-        f"{'ID':<8}"
-        f"{'NUMBER':<12}"
-        f"{'TYPE':<22}"
-        f"{'PRICE':<10}"
-        f"{'STATUS':<18}"
-    )
+    except Error as e:
+        print("Error:", e)
 
-    print("-" * 70)
-
-    for room in rooms:
-        print(
-            f"{room[0]:<8}"
-            f"{room[1]:<12}"
-            f"{room[2]:<22}"
-            f"{room[3]:<10}"
-            f"{room[4]:<18}"
-        )
+    pause()
 
 
 def add_room():
-
-    print_header("ADD NEW ROOM")
+    print_header("ADD ROOM")
 
     try:
         room_id = int(input("Enter room ID: "))
@@ -108,20 +110,20 @@ def add_room():
         print("\nRoom added successfully!")
 
     except ValueError:
-        print("\nPlease enter valid numerical values.")
+        print("\nPlease enter valid numeric values for ID, room number and price.")
 
     except Error as e:
         db.rollback()
-        print("\nCould not add room.")
-        print("Error:", e)
+        print("\nError:", e)
+
+    pause()
 
 
 def search_room():
-
     print_header("SEARCH ROOM")
 
     try:
-        room_id = int(input("Enter room ID: "))
+        room_id = int(input("Enter room ID to search: "))
 
         query = """
         SELECT * FROM rooms
@@ -129,29 +131,28 @@ def search_room():
         """
 
         cursor.execute(query, (room_id,))
-
         room = cursor.fetchone()
 
         if room:
             print("\nRoom found!")
-            print("Room ID     :", room[0])
-            print("Room Number :", room[1])
-            print("Room Type   :", room[2])
-            print("Price       :", room[3])
-            print("Status      :", room[4])
-
+            print("Room ID:", room[0])
+            print("Room Number:", room[1])
+            print("Room Type:", room[2])
+            print("Price:", room[3])
+            print("Status:", room[4])
         else:
             print("\nRoom not found.")
 
     except ValueError:
-        print("\nPlease enter a valid room ID.")
+        print("Please enter a valid room ID.")
 
     except Error as e:
-        print("\nError:", e)
+        print("Error:", e)
+
+    pause()
 
 
 def update_room():
-
     print_header("UPDATE ROOM STATUS")
 
     try:
@@ -164,7 +165,9 @@ def update_room():
         WHERE room_id = %s
         """
 
-        cursor.execute(query, (new_status, room_id))
+        values = (new_status, room_id)
+
+        cursor.execute(query, values)
 
         if cursor.rowcount == 0:
             print("\nRoom not found.")
@@ -173,11 +176,13 @@ def update_room():
             print("\nRoom status updated successfully!")
 
     except ValueError:
-        print("\nPlease enter a valid room ID.")
+        print("Please enter a valid room ID.")
 
     except Error as e:
         db.rollback()
-        print("\nError:", e)
+        print("Error:", e)
+
+    pause()
 
 
 # ============================================================
@@ -185,40 +190,42 @@ def update_room():
 # ============================================================
 
 def view_resources():
+    print_header("VIEW RESOURCES")
 
-    print_header("RESOURCE DETAILS")
+    try:
+        cursor.execute("SELECT * FROM resources")
+        resources = cursor.fetchall()
 
-    cursor.execute("SELECT * FROM resources")
+        if not resources:
+            print("No resources found.")
+        else:
+            print(
+                f"{'ID':<10}"
+                f"{'Resource':<22}"
+                f"{'Category':<18}"
+                f"{'Quantity':<12}"
+                f"{'Available':<12}"
+            )
 
-    resources = cursor.fetchall()
+            print("-" * 74)
 
-    if not resources:
-        print("No resources found.")
-        return
+            for resource in resources:
+                print(
+                    f"{resource[0]:<10}"
+                    f"{resource[1]:<22}"
+                    f"{resource[2]:<18}"
+                    f"{resource[3]:<12}"
+                    f"{resource[4]:<12}"
+                )
 
-    print(
-        f"{'ID':<8}"
-        f"{'RESOURCE':<22}"
-        f"{'CATEGORY':<18}"
-        f"{'QUANTITY':<12}"
-        f"{'AVAILABLE':<12}"
-    )
+    except Error as e:
+        print("Error:", e)
 
-    print("-" * 72)
-
-    for resource in resources:
-        print(
-            f"{resource[0]:<8}"
-            f"{resource[1]:<22}"
-            f"{resource[2]:<18}"
-            f"{resource[3]:<12}"
-            f"{resource[4]:<12}"
-        )
+    pause()
 
 
 def add_resource():
-
-    print_header("ADD NEW RESOURCE")
+    print_header("ADD RESOURCE")
 
     try:
         resource_id = int(input("Enter resource ID: "))
@@ -247,12 +254,13 @@ def add_resource():
         print("\nResource added successfully!")
 
     except ValueError:
-        print("\nPlease enter valid numerical values.")
+        print("\nPlease enter valid numbers for ID and quantities.")
 
     except Error as e:
         db.rollback()
-        print("\nCould not add resource.")
-        print("Error:", e)
+        print("\nError:", e)
+
+    pause()
 
 
 # ============================================================
@@ -260,40 +268,37 @@ def add_resource():
 # ============================================================
 
 def view_guests():
+    print_header("VIEW GUESTS")
 
-    print_header("GUEST DETAILS")
+    try:
+        cursor.execute("SELECT * FROM guests")
+        guests = cursor.fetchall()
 
-    cursor.execute("SELECT * FROM guests")
+        if not guests:
+            print("No guests found.")
+        else:
+            print(
+                f"{'ID':<10}"
+                f"{'Name':<30}"
+                f"{'Phone':<15}"
+            )
 
-    guests = cursor.fetchall()
+            print("-" * 55)
 
-    if not guests:
-        print("No guests found.")
-        return
+            for guest in guests:
+                print(
+                    f"{guest[0]:<10}"
+                    f"{guest[1]:<30}"
+                    f"{guest[2]:<15}"
+                )
 
-    print(
-        f"{'ID':<8}"
-        f"{'NAME':<22}"
-        f"{'PHONE':<16}"
-        f"{'CHECK-IN':<15}"
-        f"{'CHECK-OUT':<15}"
-    )
+    except Error as e:
+        print("Error:", e)
 
-    print("-" * 76)
-
-    for guest in guests:
-        print(
-            f"{guest[0]:<8}"
-            f"{guest[1]:<22}"
-            f"{guest[2]:<16}"
-            f"{str(guest[3]):<15}"
-            f"{str(guest[4]):<15}"
-        )
-
-
+    pause()
+    # Collects guest details and inserts a new guest record into the guests table
 def add_guest():
-
-    print_header("ADD NEW GUEST")
+    print_header("ADD GUEST")
 
     try:
         guest_id = int(input("Enter guest ID: "))
@@ -326,61 +331,63 @@ def add_guest():
 
     except Error as e:
         db.rollback()
-        print("\nCould not add guest.")
-        print("Error:", e)
+        print("\nError:", e)
 
+    pause()
 
 # ============================================================
 # BOOKING FUNCTIONS
 # ============================================================
 
 def view_bookings():
+    print_header("VIEW BOOKINGS")
 
-    print_header("BOOKING DETAILS")
+    try:
+        query = """
+        SELECT
+            bookings.booking_id,
+            guests.guest_name,
+            bookings.room_id,
+            bookings.booking_date,
+            bookings.status
+        FROM bookings
+        LEFT JOIN guests
+            ON bookings.guest_id = guests.guest_id
+        """
 
-    query = """
-    SELECT
-        bookings.booking_id,
-        guests.guest_name,
-        bookings.room_id,
-        bookings.booking_date,
-        bookings.status
-    FROM bookings
-    LEFT JOIN guests
-        ON bookings.guest_id = guests.guest_id
-    """
+        cursor.execute(query)
+        bookings = cursor.fetchall()
 
-    cursor.execute(query)
+        if not bookings:
+            print("No bookings found.")
+        else:
+            print(
+                f"{'Booking ID':<13}"
+                f"{'Guest Name':<25}"
+                f"{'Room ID':<12}"
+                f"{'Date':<15}"
+                f"{'Status':<15}"
+            )
 
-    bookings = cursor.fetchall()
+            print("-" * 80)
 
-    if not bookings:
-        print("No bookings found.")
-        return
+            for booking in bookings:
+                print(
+                    f"{booking[0]:<13}"
+                    f"{booking[1]:<25}"
+                    f"{booking[2]:<12}"
+                    f"{booking[3]:<15}"
+                    f"{booking[4]:<15}"
+                )
 
-    print(
-        f"{'ID':<8}"
-        f"{'GUEST':<22}"
-        f"{'ROOM ID':<12}"
-        f"{'DATE':<15}"
-        f"{'STATUS':<15}"
-    )
+    except Error as e:
+        print("Error:", e)
 
-    print("-" * 72)
-
-    for booking in bookings:
-        print(
-            f"{booking[0]:<8}"
-            f"{booking[1]:<22}"
-            f"{booking[2]:<12}"
-            f"{str(booking[3]):<15}"
-            f"{booking[4]:<15}"
-        )
+    pause()
 
 
 def add_booking():
-
-    print_header("CREATE NEW BOOKING")
+    print_header("CREATE BOOKING")
 
     try:
         booking_id = int(input("Enter booking ID: "))
@@ -409,12 +416,13 @@ def add_booking():
         print("\nBooking created successfully!")
 
     except ValueError:
-        print("\nPlease enter valid numerical values.")
+        print("\nPlease enter valid numeric values.")
 
     except Error as e:
         db.rollback()
-        print("\nCould not create booking.")
-        print("Error:", e)
+        print("\nError:", e)
+
+    pause()
 
 
 # ============================================================
@@ -425,7 +433,7 @@ def main_menu():
 
     while True:
 
-        print_header("MAIN MENU")
+        print_header("HOTEL RESOURCE MANAGEMENT SYSTEM")
 
         print("1. View Rooms")
         print("2. Add Room")
@@ -445,59 +453,53 @@ def main_menu():
 
         if choice == "1":
             view_rooms()
-            pause()
 
         elif choice == "2":
             add_room()
-            pause()
 
         elif choice == "3":
             search_room()
-            pause()
 
         elif choice == "4":
             update_room()
-            pause()
 
         elif choice == "5":
             view_resources()
-            pause()
 
         elif choice == "6":
             add_resource()
-            pause()
 
         elif choice == "7":
             view_guests()
-            pause()
 
         elif choice == "8":
             add_guest()
-            pause()
 
         elif choice == "9":
             view_bookings()
-            pause()
 
         elif choice == "10":
             add_booking()
-            pause()
 
         elif choice == "11":
-            print("\nThank you for using the Hotel Resource Management System.")
+            print("\nThank you for using the Hotel Resource Management System!")
             break
 
         else:
-            print("\nInvalid choice. Please select a valid option.")
+            print("\nInvalid choice. Please select a number from 1 to 11.")
+
+            pause()
 
 
 # ============================================================
-# START PROGRAM
+# PROGRAM START
 # ============================================================
 
-main_menu()
+try:
+    main_menu()
 
-cursor.close()
-db.close()
+finally:
+    cursor.close()
+    db.close()
 
-print("Database connection closed.")
+    print("\nDatabase connection closed.")
