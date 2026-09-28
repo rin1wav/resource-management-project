@@ -1,85 +1,71 @@
-# 🏨 Resource Management Project
+# 🏨 Hotel Resource Management System
 
-A simple **Resource Management System** based on the working of a hotel, developed as a school project using **Python and MySQL**.
+A **Hotel Resource Management System** developed using **Python and MySQL**.
+
+This project is designed to manage important hotel information such as rooms, guests, hotel resources, and bookings. Python is used to provide the user interface and application logic, while MySQL is used to store and manage the data permanently.
+
+---
 
 ## 📌 About the Project
 
-This project demonstrates how a relational database can be used to manage and organize resources in a hotel.
+The Hotel Resource Management System is a menu-driven Python application connected to a MySQL database.
 
-The system keeps track of:
+The system allows the user to:
 
-* 🛏️ Hotel rooms
-* 📦 Hotel resources
-* 👤 Guests
-* 📋 Room bookings
+- View hotel rooms
+- Add new rooms
+- Search for rooms
+- Update room status
+- View hotel resources
+- Add new resources
+- View guest information
+- Add new guests
+- View bookings
+- Create new bookings
+- Store all information in a MySQL database
 
-The project uses **MySQL** to store and manage the data, while **Python** is used to interact with the database and provide the user interface.
+The main purpose of this project is to demonstrate how **Python can interact with a relational database using MySQL**.
+
+---
 
 ## 🛠️ Technologies Used
 
-* **Python** — Application logic and user interaction
-* **MySQL** — Database management
-* **SQL** — Creating, storing, retrieving, and modifying data
+### Python
 
-## 🗄️ Database Structure
+Python is used for:
 
-The database contains four main tables:
+- Application logic
+- Menu creation
+- Taking input from the user
+- Displaying database records
+- Sending SQL queries to MySQL
+- Handling errors
+- Updating and inserting records
 
-### `rooms`
+### MySQL
 
-Stores information about hotel rooms.
+MySQL is used as the database management system.
 
-| Field         | Description           |
-| ------------- | --------------------- |
-| `room_id`     | Unique ID of the room |
-| `room_number` | Hotel room number     |
-| `room_type`   | Type of room          |
-| `price`       | Price per night       |
-| `status`      | Current room status   |
+It stores information about:
 
-### `resources`
+- Rooms
+- Resources
+- Guests
+- Bookings
 
-Stores information about resources available in the hotel.
+### MySQL Connector for Python
 
-| Field           | Description                  |
-| --------------- | ---------------------------- |
-| `resource_id`   | Unique resource ID           |
-| `resource_name` | Name of the resource         |
-| `category`      | Resource category            |
-| `quantity`      | Total quantity               |
-| `available`     | Currently available quantity |
+The Python program communicates with MySQL using:
 
-### `guests`
+`mysql-connector-python`
 
-Stores information about hotel guests.
+This connector allows Python to establish a connection with the MySQL server and execute SQL commands.
 
-| Field        | Description       |
-| ------------ | ----------------- |
-| `guest_id`   | Unique guest ID   |
-| `guest_name` | Name of the guest |
-| `phone`      | Contact number    |
-| `check_in`   | Check-in date     |
-| `check_out`  | Check-out date    |
+---
 
-### `bookings`
+# 📂 Database Structure
 
-Stores information about room bookings.
+The project uses a database named:
 
-| Field          | Description           |
-| -------------- | --------------------- |
-| `booking_id`   | Unique booking ID     |
-| `guest_id`     | ID of the guest       |
-| `room_id`      | ID of the booked room |
-| `booking_date` | Date of booking       |
-| `status`       | Booking status        |
-
-## 💻 SQL Features Demonstrated
-
-The project demonstrates several fundamental SQL operations, including:
-
-* `CREATE DATABASE`
-* `CREATE TABLE`
-* `INSERT`
-* `SELECT`
-* `WHERE`
-* `UPDATE`
+```text
+hotel
